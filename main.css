@@ -40,7 +40,7 @@ nav.menu ul li a:hover  {
 header.hero {
     height: 350px;
     background-color: #b4c6f0;
-    background-image: url('pb/bg.png');
+    background-image: url('bg.png');
     background-size: 400px;
     background-repeat: no-repeat;
     background-position: center bottom;
@@ -83,7 +83,7 @@ div.hero h2 {
     text-align: center;
 }
 
-.container div.text-box {
+.container article.text-box {
     display: inline-block;
     width: 100%;
     max-width: 340px;
@@ -92,7 +92,7 @@ div.hero h2 {
 }
 
 @media screen and (min-width: 768px) {
-    .container .div.text-box {
+    .container .article.text-box {
         margin: 10px;
     }
 }

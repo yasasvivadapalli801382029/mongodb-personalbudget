@@ -82,6 +82,7 @@
                 </p>
             </article>
 
+        </br>
             <article class="text-box">
                 <!-- This is a semantic html change -->
                 <header>
@@ -123,10 +124,29 @@
                 <!-- This is a semantic html change -->
                 <header>
                     <!-- This is an A11y Change -->
+                    <h2>Free</h2>
+                </header>
+                <p>
+                    This app is free!!! And you are the only one holding your data!
+                </p>
+            </article>
+        </br>
+            <article class="text-box">
+                <!-- This is a semantic html change -->
+                <header>
+                    <!-- This is an A11y Change -->
                     <h2>Chart</h2>
                 </header>
                 <p>
                     <canvas id="myChart" width="400" height="400"></canvas>
+                </p>
+            </article>
+
+        </br>
+            <article class="text-box"></article>
+                <h2>D3JS Chart</h2>
+                <p>
+                    <div class="D3JSChart"></div>
                 </p>
             </article>
 
@@ -142,6 +162,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js" integrity="sha512-DdX/YwF5e41Ok+AI81HI8f5/5UsoxCVT9GKYZRIzpLxb8Twz4ZwPPX+jQMwMhNQ9b5+zDEefc+dcvQoPWGNZ3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js" integrity="sha512-L0Shl7nXXzIlBSUUPpxrokqq4ojqgZFQczTYlGjzONGTDAcLremjwaWv5A+EDLnxhQzY5xUZPWLOLqYRkY0Cbw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
     <script>
         var dataSource = {
             datasets: [
@@ -169,6 +191,54 @@
             });
         }
 
+        function D3Chart() {
+
+            const w = 350;
+            const h = 300;
+            const r = Math.min(w, h) / 2;
+    
+    
+            const color = d3.scaleOrdinal()
+                .domain(dataSource.labels)
+                .range(dataSource.datasets[0].backgroundColor); 
+    
+    
+            const svg = d3.select(".D3JSChart")
+                .append("svg")
+                .attr("width", w)
+                .attr("height", h)
+                .append("g")
+                .attr("transform", `translate(${w / 2},${h / 2})`);
+    
+    
+            const pie = d3.pie()
+                .value(d => d);
+    
+    
+            const arc = d3.arc()
+                .innerRadius(r - 50) 
+                .outerRadius(r);
+    
+    
+            const arcs = svg.selectAll("arc")
+                .data(pie(dataSource.datasets[0].data))
+                .enter()
+                .append("g")
+                .attr("class", "arc");
+    
+    
+            arcs.append("path")
+                .attr("d", arc)
+                .attr("fill", (d, i) => color(i)); 
+    
+    
+            arcs.append("text")
+                .attr("transform", d => `translate(${arc.centroid(d)})`)
+                .attr("text-anchor", "middle")
+                .text((d, i) => dataSource.labels[i]);
+            }
+
+
         function getBudget() {
             axios.get('/budget')
             .then(function (res) {
@@ -177,6 +247,7 @@
                     dataSource.datasets[0].data[i] = res.data.myBudget[i].budget;
                     dataSource.labels[i] = res.data.myBudget[i].title;
                 }
+                D3Chart();
                 createChart();
             });
         }
